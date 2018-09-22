@@ -11,6 +11,7 @@ public class Main {
         obj.setVisible(true);
         obj.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         obj.add(gamePlay);
+        obj.setLocationRelativeTo(null);
     }
 
     public static void main(String[] args){

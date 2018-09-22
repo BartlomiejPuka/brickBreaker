@@ -15,7 +15,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
     private int score = 0;
 
     private Timer timer;
-    private int delay = 12;
+    private int delay = 4;
 
     private int playerX = 320;
 
@@ -31,7 +31,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
         addKeyListener(this);
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
-        timer = new Timer(this.delay, this);
+        timer = new Timer(delay, this);
         timer.start();
 
     }
@@ -49,6 +49,11 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
         g.fillRect(0,0,3,592);
         g.fillRect(0,0,692,3);
         g.fillRect(691,0,3,592);
+
+        //
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("serif", Font.BOLD,25));
+        g.drawString(""+score,592,30);
 
         // the paddle
         g.setColor(Color.BLUE);
@@ -69,6 +74,37 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
             if(new Rectangle(ballPosX, ballPosY, 20, 20).intersects(new Rectangle(playerX, 550, 100, 8))){
                 ballYdir = -ballYdir;
             }
+            A:
+            for(int i = 0; i < map.map.length;i++){
+                for(int j = 0; j < map.map[0].length;j++){
+                    if(map.map[i][j] > 0){
+                        int brickX = j * map.brickWidth + 80;
+                        int brickY = i * map.brickHeight + 50;
+                        int brickWidth = map.brickWidth;
+                        int brickHeight = map.brickHeight;
+
+                        Rectangle rect = new Rectangle(brickX, brickY, brickWidth, brickHeight);
+                        Rectangle ballRect = new Rectangle(ballPosX, ballPosY,20,20);
+                        Rectangle brickRect = rect;
+
+                        if(ballRect.intersects(brickRect)){
+                            map.setBrickValue(0, i, j);
+                            totalBricks--;
+                            score+=20;
+
+                            if(ballPosX + 19 <= brickRect.x || ballPosX + 1 >= brickRect.x + brickRect.width){
+                                ballXdir = -ballXdir;
+                            } else{
+                                ballYdir = -ballYdir;
+                            }
+
+                            break A;
+                        }
+                    }
+                }
+            }
+
+
             ballPosX+=ballXdir;
             ballPosY+=ballYdir;
             if(ballPosX < 0 || ballPosX > 670){
