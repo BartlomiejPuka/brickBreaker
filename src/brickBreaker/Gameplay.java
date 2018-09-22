@@ -15,14 +15,14 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
     private int score = 0;
 
     private Timer timer;
-    private int delay = 4;
+    private int delay = 8;
 
     private int playerX = 320;
 
     private int ballPosX = 120;
     private int ballPosY = 350;
-    private int ballXdir = -1;
-    private int ballYdir = -2;
+    private int ballXdir = -2;
+    private int ballYdir = -3;
 
     private MapGenerator map;
 
@@ -62,6 +62,30 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
         // the ball
         g.setColor(Color.yellow);
         g.fillOval(ballPosX,ballPosY,20,20);
+
+        if(totalBricks <= 0){
+            play = false;
+            ballXdir = 0;
+            ballYdir = 0;
+            g.setColor(Color.RED);
+            g.setFont(new Font("serif",Font.BOLD,30));
+            g.drawString("You won, score: "+score,190,300);
+
+            g.setFont(new Font("serif",Font.BOLD,20));
+            g.drawString("Press Enter to Restart",230,350);
+        }
+
+        if(ballPosY > 570){
+            play = false;
+            ballXdir = 0;
+            ballYdir = 0;
+            g.setColor(Color.RED);
+            g.setFont(new Font("serif",Font.BOLD,30));
+            g.drawString("Game Over, Scores: "+score,190,300);
+
+            g.setFont(new Font("serif",Font.BOLD,20));
+            g.drawString("Press Enter to Restart",230,350);
+        }
 
         g.dispose();
     }
@@ -110,7 +134,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
             if(ballPosX < 0 || ballPosX > 670){
                 ballXdir = -ballXdir;
             }
-            if(ballPosY < 5 || ballPosY > 550){
+            if(ballPosY < 5){
                 ballYdir = -ballYdir;
             }
         }
@@ -135,6 +159,20 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
                 playerX = 10;
             } else {
                 moveLeft();
+            }
+        }
+        if(keyEvent.getKeyCode() == keyEvent.VK_ENTER){
+            if(!play){
+                play = true;
+                ballPosX = 120;
+                ballPosY = 350;
+                ballXdir = -2;
+                ballYdir = -3;
+                playerX = 310;
+                score = 0;
+                totalBricks = 21;
+                map = new MapGenerator(3,7);
+                repaint();
             }
         }
     }
